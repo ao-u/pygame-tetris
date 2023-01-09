@@ -18,13 +18,13 @@ currentPeice = Peice(0, 0, 0, 0, [])
 
 deadBlocks = []
 
-#rotation for I block
+#colors for each peice
 COLOR = (
     (161, 190, 228),
     (),
     (),
-
 )
+#rotation matrices for each peice
 R =    (
     (
         #I, 0
@@ -35,6 +35,31 @@ R =    (
     ),
     (
         #J, 1
+        (-1, -1, -1, 0, 0, 0, 1, 0),
+        (1, -1, 0, -1, 0, 0, 0, 1),
+        (1, 1, -1, 0, 0, 0, 1, 0),
+        (-1, 1, 0, -1, 0, 0, 0, 1)
+    ),
+    (
+        #L, 2
+        (-1, 1, -1, 0, 0, 0, 1, 0),
+        (1, 1, 0, -1, 0, 0, 0, 1),
+        (-1, 1, -1, 0, 0, 0, 1, 0),
+        (-1, -1, 0, -1, 0, 0, 0, 1)
+    ),
+    (
+        #O, 3
+        (-1, 0, -1, -1, 0, -1, 0, 0),
+        (-1, 0, -1, -1, 0, -1, 0, 0),
+        (-1, 0, -1, -1, 0, -1, 0, 0),
+        (-1, 0, -1, -1, 0, -1, 0, 0)
+    ),
+    (
+        #S, 4
+        (-1, 1, -1, 0, 0, 0, 1, 0),
+        (1, 1, 0, -1, 0, 0, 0, 1),
+        (-1, 1, -1, 0, 0, 0, 1, 0),
+        (-1, -1, 0, -1, 0, 0, 0, 1)
     )
 )
 
@@ -43,7 +68,7 @@ R =    (
 
 def makeDeadPeice(peice):
     for i in range(4):
-        deadBlocks.append(Block(peice.x + R[peice.tipe][peice.r][i * 2], peice.y + R[peice.tipe][peice.r][i * 2 + 1], COLOR[peice.tipe]))
+        deadBlocks.append(currentPeice.blocks[i])
     
 def updateCurrentPeiceBlocks():
     for i in range(4):
@@ -112,20 +137,29 @@ while run:
     keys = game.key.get_pressed()
     if keys[game.K_UP]:
         currentPeice.r +=1
+        updateCurrentPeiceBlocks()
+        if peiceOutOfBounds():
+            currentPeice.r -=1
+            
     if keys[game.K_DOWN]:
         currentPeice.r -=1
+        updateCurrentPeiceBlocks()
+        if peiceOutOfBounds():
+            currentPeice.r +=1
+        
     if keys[game.K_a]:
         currentPeice.x-=1
         updateCurrentPeiceBlocks()
         if peiceOutOfBounds():
             currentPeice.x+=1
-            updateCurrentPeiceBlocks()
+            
     if keys[game.K_d]:
         currentPeice.x+=1
         updateCurrentPeiceBlocks()
         if peiceOutOfBounds():
             currentPeice.x-=1
-            updateCurrentPeiceBlocks()
+            
+    updateCurrentPeiceBlocks()
     currentPeice.r %=4
 
     game.display.update()
@@ -134,6 +168,3 @@ while run:
 
     
 game.quit()
-
-
-
