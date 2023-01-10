@@ -12,8 +12,8 @@ newpeice = True
 scale = 25
 tick = 0
 
-#       0    1    2    3    4    5    6
-#bag =["I", "J", "L", "O", "S", "T", "Z"]
+#       0I    1J    2L    3O    4S    5T    6Z
+bag =[0, 1, 2, 3, 4, 5, 6]
 
 currentPeice = Peice(0, 0, 0, 0, [])
 
@@ -21,7 +21,9 @@ deadBlocks = []
 
 delayperkey = [0, 0, 0, 0]
 
-delay = 250
+delay = 150
+
+ticks = 120
 
 
 #colors for each peice
@@ -30,10 +32,12 @@ COLOR = (
     (51, 76, 178),
     (216, 127, 51),
     (229, 229, 51),
-    (127, 204, 25)
+    (127, 204, 25),
+    (197, 66, 245),
+    (200, 0, 0)
 )
 #rotation matrices for each peice
-R = (
+R =     (
     (
         #I, 0
         (-1, 0, 0, 0, 1, 0, 2, 0),
@@ -71,10 +75,17 @@ R = (
     ),
     (
         #T, 5
-        (-1, 1, -1, 0, 0, 0, 0, -1),
-        (1, 1, 0, -1, 0, 0, 1, 0),
-        (-1, 1, 0, 1, 0, 0, 1, 0),
-        (-1, -1, -1, 0, 0, 0, 0, 1)
+        (1, 0, -1, 0, 0, 0, 0, -1),
+        (0, 1, 0, -1, 0, 0, 1, 0),
+        (-1, 0, 0, 1, 0, 0, 1, 0),
+        (0, -1, -1, 0, 0, 0, 0, 1)
+    ),
+    (
+        #Z, 6
+        (1, 0, -1, -1, 0, 0, 0, -1),
+        (0, 1, 1, -1, 0, 0, 1, 0),
+        (-1, 0, 0, 1, 0, 0, 1, 1),
+        (0, -1, -1, 0, 0, 0, -1, 1)
     )
 )
 
@@ -159,7 +170,7 @@ while run:
         delayperkey[3] = tick + delay
     
     tick+=1
-    if tick % 100 == 0:
+    if tick % ticks == 0:
         
         #fill bg with nothing
         win.fill((0, 0, 0))
@@ -174,6 +185,24 @@ while run:
             updateCurrentPeiceBlocks()
             makeDeadPeice(currentPeice)
             newpeice = True
+
+
+        #create new peice if needed
+        if newpeice:
+            currentPeice.x = 5
+            currentPeice.y = 0
+            currentPeice.r = 0
+            
+            bagchoice = random.choice(bag)
+            bag.remove(bagchoice)
+            currentPeice.tipe = bagchoice
+            if len(bag) == 0:
+                bag = [0, 1, 2, 3, 4, 5, 6]
+            updateCurrentPeiceBlocks()
+            #makePeice(peices[-1])
+            #random.choice(bag)
+            newpeice = False
+
 
         #clear lines
         lineClearer = [ [] for _ in range(20)]
@@ -193,16 +222,7 @@ while run:
 
 
         
-        #create new peice if needed
-        if newpeice:
-            currentPeice.x = 5
-            currentPeice.y = 0
-            currentPeice.r = 0
-            currentPeice.tipe = random.randint(0, 4)
-            updateCurrentPeiceBlocks()
-            #makePeice(peices[-1])
-            #random.choice(bag)
-            newpeice = False
+        
     
     
     
@@ -223,5 +243,5 @@ while run:
 
         game.display.update()
         #exec("print('hello')")
-    game.time.delay(1) 
+    game.time.delay(1)
 game.quit()
