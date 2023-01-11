@@ -9,7 +9,7 @@ game.init()
 win = game.display.set_mode((gamex, gamey))
 run = True
 newpeice = True
-scale = 25
+scale = 50
 tick = 0
 
 #       0I    1J    2L    3O    4S    5T    6Z
